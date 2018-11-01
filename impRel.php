@@ -4,22 +4,22 @@
  * @package    FDC
  * @copyright  Copyright (c) 2018
  * @author     Jose Augsuto Freire <jose at procyon dot com dot br>
- * @comment    Geracao de Relatorios em PDF
- * @param      idusu Codigo da Empresa
- * @param      email Email da Empresa
- * @param      idipas Codigo da Passagem
- * @param      logo Caminho + imagem.jpg (Obrigatorio)
- * @param      dirpdf Caminho da Geracao do PDF (Obrigatorio)
- * @param      di Data da Passagem Incial
- * @param      df Data da Passagem Final
- * @param      pi Passagem Incial
- * @param      pf Passagem Final
- * @param      q Quantidade de Registros
- * @param      s Formato do Retorno de Saida JSON/XML
- * @param      v view PDF/Browser (Padrão PDF)
- * @param      m modo de visualizacao do PDF - [W] fullwidth, [F] fullpage (Padrão PDF)
- * @param      e Envia Email [S] Sim (Mostra e Envia) / [E] Envia / '' Somente Mostra (Padrão)
- * @param      tipo Tipo de Documento (Padrão OrcPas para Orçamento, branco para Passagem)
+ * @comment    Geração de documentos em PDF baseados na Ficha do Carro (http://www.fichadocarro.com.br / https://github.com/AquarelaDesign/fdcpdf)
+ * @param      idgpas Código Identificador da Passagem (Obrigatório quando não for informado idusu ou email da empresa)
+ * @param      idusu Código Identificador da Empresa (Obrigatório quando não for informado idgpas ou email da empresa)
+ * @param      email Email da Empresa (Obrigatório quando não for informado idgpas ou idusu da empresa)
+ * @param      idipas Código da Passagem (Opcional quando informado parametros de filtro)
+ * @param      logo Imagem da Logomarca Previamente enviada (Informado se a imagem já se encontrar no servidor)
+ * @param      di Data da Passagem Incial (Data Inicial para Filtro de Pesquisa)
+ * @param      df Data da Passagem Final (Data Final para Filtro de Pesquisa)
+ * @param      pi Passagem Incial (Passagem/Orçamento Inicial para Filtro de Pesquisa)
+ * @param      pf Passagem Final (Passagem/Orçamento Final para Filtro de Pesquisa)
+ * @param      q Quantidade de Registros (Quantidade de Registros que será retornado quando aplicado filtro)
+ * @param      v view Formato que será apresentado PDF/HTML (Padrão PDF)
+ * @param      m modo de visualizacao do PDF - [W] fullwidth, [F] fullpage (Padrão 'fullpage')
+ * @param      e Envia Email [S] Sim (Mostra e Envia) / [E] Envia / '' Somente Mostra (Padrão Somente Mostra)
+ * @param      tipo Tipo de Documento [OrcPas] Orçamento / Passagem (Padrão 'OrcPas')
+ * @param      dev Modo desenvolvimento ['D'] Desenvolvimento / [''] Produção (Padrão [''])
  */
 
 use Spipu\Html2Pdf\Html2Pdf;

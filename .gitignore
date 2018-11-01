@@ -1,3 +1,5 @@
 .vscode
 composer.lock
 vendor
+fdcpdf.git
+
