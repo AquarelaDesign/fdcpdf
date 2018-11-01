@@ -16,35 +16,21 @@
  * @param      pf Passagem Final
  * @param      q Quantidade de Registros
  * @param      s Formato do Retorno de Saida JSON/XML
+ * @param      v view PDF/Browser (Padrão PDF)
+ * @param      m modo de visualizacao do PDF - [W] fullwidth, [F] fullpage (Padrão PDF)
+ * @param      e Envia Email [S] Sim (Mostra e Envia) / [E] Envia / '' Somente Mostra (Padrão)
  * @param      tipo Tipo de Documento (Padrão OrcPas para Orçamento, branco para Passagem)
  */
-/*************************************************************
-### Teste Web ###
-http://pro03des.procyon.com.br:3125/wss/NFSe/impRPS.php
-?codemp=FL
-&codfil=2
-&rps=190
-&logo=/siare/v01/r56/wss/imagens/logoaudi2017.jpg
-&dirpdf=/desen/jose
-&url=http://pro03des.procyon.com.br:3125
-&pl=siareweb.pl
-&tipo=IPM
 
-### Teste Prompt ###
-php /siare/v01/r56/wss/NFSe/impRPS.php
--codemp FL
--codfil 2 
--rps 190
--logo /siare/v01/r56/wss/imagens/logoaudi2017.jpg
--dirpdf /desen/jose
--url http://pro03des.procyon.com.br:3125
--pl siareweb.pl
--tipo IPM
+use Spipu\Html2Pdf\Html2Pdf;
+use Spipu\Html2Pdf\Exception\Html2PdfException;
+use Spipu\Html2Pdf\Exception\ExceptionFormatter;
 
-php /siare/v01/r56/wss/NFSe/impRPS.php -codemp FL -codfil 2 -rps 190 -logo /siare/v01/r56/wss/imagens/logoaudi2017.jpg -dirpdf /desen/jose
-*************************************************************/
-error_reporting(E_ALL); //(E_ALL)
-ini_set('display_errors', 'on'); //1
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
 ini_set("memory_limit","128M");
 
 ################################## Includes ##################################
@@ -87,10 +73,17 @@ $di     = (isset($param['di'])     ? $param['di']     : '');
 $df     = (isset($param['df'])     ? $param['df']     : '');
 $pi     = (isset($param['pi'])     ? $param['pi']     : '');
 $pf     = (isset($param['pf'])     ? $param['pf']     : '');
+$view   = (isset($param['v'])      ? $param['v']      : '');
 $q      = (isset($param['q'])      ? $param['q']      : '');
+$modo   = (isset($param['m'])      ? $param['m']      : '');
 $tipo   = (isset($param['t'])      ? $param['t']      : 'OrcPas');
 
+$enviarEmail = (isset($param['e']) ? $param['e']      : '');
+
 $imagem = (isset($param['logo'])   ? $param['logo']   : '');
+
+$DevProd = (isset($param['dev'])   ? $param['dev']    : '');
+$DevProd = 'D';
 
 ## Validacao dos Parametros
 if ($idgpas == '' && $idusu == '' && $email == '') {
@@ -117,7 +110,7 @@ $url .= "?idgpas=".$idgpas
      .  "&q=".$q
      .  "&tipo=".$tipo;
 
-## Consulta servico impRPS para bucar os dados do RPS
+## Consulta servico para buscar os dados
 $Json   = file_get_contents($url) or die("Erro no WebService");
 $Json   = json_decode($Json);
 $Dados  = $Json->dados;
@@ -127,35 +120,70 @@ $Dados  = $Json->dados;
 //echo '</pre><br/>';
 //exit;
 
-$fc_Ofi = $Dados->ttfcofi[0];
-$fc_Pas = $Dados->ttfccpv;
-
-
-if (!file_exists($imagem)) {
-   $logo = $dirloc.'fdcpdf/images/'. strtolower($imagem).'.jpg';
-   
-   if (!file_exists($logo)) {
-      $logo = $dirloc.'fdcpdf/images/'. strtolower($imagem).'.png';
-      
-      if (!file_exists($logo)) {
-         $logo = '';
-      }
-   }
+if (property_exists($Dados, 'ttfcofi')) {
+   $fc_Ofi = $Dados->ttfcofi[0];
+} else {
+   $fc_Ofi = NULL;
+}
+	
+if (property_exists($Dados, 'ttfccpv')) {
+   $fc_Pas = $Dados->ttfccpv;
+} else {
+   $fc_Pas = NULL;
 }
 
+if ($fc_Ofi == NULL || $fc_Pas == NULL) {
+	echo '<b>DADOS INSUFICIENTES PARA GERAÇÃO DO PDF</b>';
+}
+
+if (!file_exists($imagem)) {
+   //$logo = $dirloc.'fdcpdf/images/'. strtolower($imagem).'.jpg';
+   $logo = '';
+}
+
+$QRCode = "Ficha do Carro\nhttp://l.ead.me/baz67L";
+
 $AutorPDF  = 'Procyon Assessoria e Sistemas Ltda.';
-$ChavesPDF = 'Orçamento, Passagem, Procyon';
+$ChavesPDF = 'Orçamento, Passagem, Procyon, Ficha, Carro';
 
 for ($x=0;$x < count($fc_Pas);$x++) {
    
+   if (property_exists($fc_Pas[$x], 'ttfcspv')) {
+      $fc_Ser = $fc_Pas[$x]->ttfcspv;
+   } else {
+      $fc_Ser = NULL;
+   }
+
+   if (property_exists($fc_Pas[$x], 'ttfcppv')) {
+      $fc_Pec = $fc_Pas[$x]->ttfcppv;
+   } else {
+      $fc_Pec = NULL;
+   }
+
+   if (property_exists($fc_Pas[$x], 'ttfcusu')) {
+      $fc_Usu = $fc_Pas[$x]->ttfcusu[0];
+   } else {
+      $fc_Usu = NULL;
+   }
+
+   if (property_exists($fc_Pas[$x], 'ttfcvei')) {
+      $fc_Vei = $fc_Pas[$x]->ttfcvei[0];
+   } else {
+      $fc_Vei = NULL;
+   }
+
+   if (property_exists($fc_Pas[$x], 'Totais')) {
+      $Totais = $fc_Pas[$x]->Totais[0];
+   } else {
+      $Totais = NULL;
+   }
+
    $tipo = $fc_Pas[$x]->situac;
    
-   //$tipo = $fc_Pas[$x]->idipas =
-   
    $cancelada  = '';
-   $TipoTitulo = ($tipo != 'PAS' ? htmlentities('Orçamento') : htmlentities('Passagem'));
-   $Titulo     = $TipoTitulo . htmlentities(' Nº ') . $fc_Pas[$x]->idipas; 
-   $TituloPDF  = $Titulo;
+   $TipoTitulo = ($tipo != 'PAS' ? 'Orçamento' : 'Passagem');
+   $Titulo     = $TipoTitulo . ' ' . $fc_Pas[$x]->idipas; 
+   $TituloPDF  = $Titulo . ' (' . strtolower($fc_Ofi->e_mail) . ')';
    $arqret     = ($tipo != 'PAS' ?  'ORC_' : 'PAS_')  . $fc_Pas[$x]->idipas . '_' . $fc_Ofi->idusu ;
    $arqpdf     = $arqret.'.pdf';
 
@@ -177,50 +205,117 @@ for ($x=0;$x < count($fc_Pas);$x++) {
       echo 'O Arquivo de layout '.$layout. ' não foi encontrado!';
       exit;
    }
+   
+   if ($DevProd == 'D') {
+      $Email_Empresa = 'fdc@fdc.procyon.com.br';
+      $Nome_Empresa  = 'Ficha do Carro';
+      $Email_Cliente = 'jose@procyon.com.br';
+      $Nome_Cliente  = 'José Augusto Freire'; 
+   } else {
+      $Email_Empresa = strtolower($fc_Ofi->e_mail);
+      $Nome_Empresa  = strtoupper($fc_Ofi->nome);
+      $Email_Cliente = strtolower($fc_Usu->e_mail);
+      $Nome_Cliente  = Util::subhex($fc_Usu->nome); 
+   }
+   
+   if ($view !== 'B') {
+      ## Geracao do PDF - Obtém os dados do buffer interno
+      $buffer = ob_get_contents();
 
-   exit;
-   ## Geracao do PDF - Obtém os dados do buffer interno
-   $buffer = ob_get_contents();
+      ## Descarta o buffer;
+      ob_clean(); 
 
-   ## Descarta o buffer;
-   ob_clean(); 
+      //$buffer = str_replace($cancelada, '', $buffer);
 
-   //$buffer = str_replace($cancelada, '', $buffer);
+      /******************************************************************************/
+      if (file_exists(__DIR__.'/vendor/autoload.php')) {
+         require __DIR__.'/vendor/autoload.php';
 
-   /******************************************************************************/
-   ## Inclusao da API mpdf
-   if (file_exists('../api/mpdf60/mpdf.php')) {
-      include_once '../api/mpdf60/mpdf.php';
+         try {
+            $html2pdf = new Html2Pdf('P','A4','fr');
+            $html2pdf->setDefaultFont('Arial');
+            
+            if ($modo == 'F') {
+               $html2pdf->pdf->SetDisplayMode('fullpage');
+            } elseif ($modo == 'W') {
+               $html2pdf->pdf->SetDisplayMode('fullwidth');
+            } else {
+               $html2pdf->pdf->SetDisplayMode('real');
+            }
+            
+            ## Propriedades do documento PDF 
+            $html2pdf->pdf->SetAuthor($AutorPDF);    // Autor
+            $html2pdf->pdf->SetSubject($TituloPDF);  // Assunto
+            $html2pdf->pdf->SetTitle($TituloPDF);    // Titulo
+            $html2pdf->pdf->SetKeywords($ChavesPDF); // Palavras chave
+            
+            $html2pdf->writeHTML($buffer);
+            
+            ## Enviar como anexo por email
+            
+            if ($enviarEmail != '') {
+               if ($enviarEmail != 'S') {
+                  $html2pdf->output(__DIR__.'/pdftmp/'.$arqpdf,'FI');
+               } else {
+                  $html2pdf->output(__DIR__.'/pdftmp/'.$arqpdf,'F');
+               }
 
-      $mpdf = new mPDF('C','A4','','',10,10,10,10,5,5);
+               $mail = new PHPMailer(true);                             // Passing `true` enables exceptions
+               try {
+                  //Server settings
+                  $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+                  $mail->isSMTP();                                      // Set mailer to use SMTP
+                  $mail->Host = 'mx1.hostinger.com.br';                 // Specify main and backup SMTP servers
+                  $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                  $mail->Username = 'fdc@fdc.procyon.com.br';           // SMTP username
+                  $mail->Password = 'Pr0c10n';                          // SMTP password
+                  $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+                  $mail->Port = 587;                                    // TCP port to connect to
 
-      ## Parametros mPDF 
-      //$mpdf->SetDisplayMode('fullpage');
-      //$mpdf->allow_charset_conversion = true; // Ativa a conversão de caracteres
-      //$mpdf->charset_in = 'UTF-8';            // Codificação do arquivo
+                  //Recipients
+                  $mail->setFrom($Email_Empresa, $Nome_Empresa);        // Empresa Emisora
+                  $mail->addAddress($Email_Cliente, $Nome_Cliente);     // Destinatario
+                  //$mail->addAddress('ellen@example.com');             // Name is optional
+                  $mail->addReplyTo($Email_Empresa, $Nome_Empresa);     // Empresa Emisora
+                  $mail->addCC('tanabe@procyon.com.br');
+                  $mail->addCC('sandrop@procyon.com.br');
+                  //$mail->addBCC('bcc@example.com');
 
-      ## Propriedades do documento PDF 
-      $mpdf->SetAuthor($AutorPDF);    // Autor
-      $mpdf->SetSubject($Titulo);  // Assunto
-      $mpdf->SetTitle($Titulo);    // Titulo
-      $mpdf->SetKeywords($ChavesPDF); // Palavras chave
-      $mpdf->SetCreator($AutorPDF);   // Criador
+                  //Attachments
+                  if (file_exists(__DIR__.'/pdftmp/'.$arqpdf)) {
+                     $mail->addAttachment(__DIR__.'/pdftmp/'.$arqpdf);  // Add attachments
+                  }
+                  //$mail->addAttachment('/var/tmp/file.tar.gz');       // Add attachments
+                  //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');  // Optional name
 
-      //if ($Rps->Status == '2') {
-      //   $mpdf->SetWatermarkImage('cancelada.png', 0.15, 'F');
-      //   $mpdf->showWatermarkImage = true;
-      //}
+                  //Content
+                  $mail->isHTML(true);                                  // Set email format to HTML
+                  $mail->Subject = $TituloPDF;
+                  $mail->Body    = 'Caro Fulano, segue em anexo o orçamento <b>xxxxx</b> solicitado.';
+                  $mail->AltBody = 'Caro Fulano, segue em anexo o orçamento xxxxx solicitado.';
 
-      $mpdf->WriteHTML($buffer);
-
-      ## Direciona saida do PDF
-      if (PHP_SAPI != 'cli') {
-         $mpdf->Output($arqpdf,'I'); // Abre no navegador
-      } else {
-         //$mpdf->Output($arqpdf,'F'); // Salva em disco
+                  $mail->send();
+                  //echo 'Message has been sent';
+               } catch (Exception $e) {
+                  echo 'O Email não pode ser enviado. Erro: ', $mail->ErrorInfo;
+               }
+               if (file_exists(__DIR__.'/pdftmp/'.$arqpdf)) {
+                  unlink(__DIR__.'/pdftmp/'.$arqpdf);
+               }
+               
+            } else {
+               $html2pdf->output($arqpdf,'I');
+            }
+            
+         } catch (Html2PdfException $e) {
+            $html2pdf->clean();
+            $formatter = new ExceptionFormatter($e);
+            echo $formatter->getHtmlMessage();
+         }
       }
    }
 }
+
 /******************************************************************************/
 ## Forca fechamento do programa
 exit(0);
