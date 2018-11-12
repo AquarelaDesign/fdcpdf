@@ -25,7 +25,29 @@ class Util {
             "\x8C" => "",
             "\x86" => "",
       );
-      return strtr($str, $pairs);
+      $ret = strtr($str, $pairs);
+      return htmlentities($ret);
    }
     
+   public static function formataNumero($strNum) {
+      $num = explode(",", $strNum);
+      $int = $num[0];
+
+      $achou = strripos($int, ".");
+
+      echo $achou . ' ' . $int . '<br/>';
+
+      if ($achou === false) {
+         $dec = $num[1];
+         $retNum = $int . "." . $dec;
+         echo htmlentities('Não achou ').'<br/>';
+      } else {
+         $int = str_replace(".",",",$num[0]);
+         $retNum = $num[0];
+         echo 'Achou em '. $num[0] .'<br/>';
+      }
+
+      return number_format(floatval($retNum), 2, ",", ".");
+   }
+
 }

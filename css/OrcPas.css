@@ -21,7 +21,7 @@
 
 @media screen,print {
    body {
-      font-family      : sans-serif;
+      font-family      : Arial, Helvetica, sans-serif;
       font-size        : 11px;
       color            : #000;
       margin-bottom    : 0pt;
@@ -35,14 +35,14 @@
    }
 
    table {
-      font-family      : sans-serif;
+      font-family      : Arial, Helvetica, sans-serif;
       font-size        : 11pt;
       line-height      : 1.2;
       border-collapse  : collapse;
    }
 
    table.itens {
-      font-family      : sans-serif;
+      font-family      : Arial, Helvetica, sans-serif;
       font-size        : 11pt;
       line-height      : 1.2;
       border-collapse  : collapse;
@@ -74,7 +74,7 @@
    .campo {
       font-family      : Arial, Helvetica, sans-serif;
       font-weight      : bold;
-      font-size        : 13px;
+      font-size        : 12px;
       padding-left     : 10px;
       text-align       : left;
    }
@@ -109,115 +109,3 @@
    }
 
 }
-/*
-   @media print { 
-      .noprint { 
-         display  : none; 
-      } 
-      
-      img.cancelada { 
-         top      : 150px; 
-         position : absolute; 
-         width    : 100%; 
-      }
-   }
-   
-   @media screen {
-      img.cancelada { 
-         top      : 50px; 
-         left     : -100px; 
-         position : absolute; 
-         width    : 70%; 
-      }
-   }
-   
-   @media screen, print {
-      .borda_preta { 
-         border-left : #000000 1px solid; 
-      }
-      .borda_preta_right { 
-         border-right: #000000 1px solid; 
-      }
-      .borda_preta_bottom_tracejada { 
-         border-bottom:#000000 1px dashed;
-      }
-      .borda_preta_bottom { 
-         border-bottom: #000000 1px solid; 
-      }
-      .style5 { 
-         font-family: Arial, Helvetica, sans-serif; 
-         font-size: 11px; 
-      }
-      .style6 {
-         border-right: #000000 1px solid;
-         font-family: Arial, Helvetica, sans-serif;
-         font-size: 11px;
-      }
-      .style_negrito {
-         font-weight: bold;
-         font-family: Arial, Helvetica, sans-serif;
-         font-size: 13px;
-      }
-      .style7 {
-         border-right: #000000 1px solid;
-         font-weight: bold;
-         font-family: Arial, Helvetica, sans-serif;
-         font-size: 13px;
-      }
-      .style9 {
-         font-family: Arial, Helvetica, sans-serif;
-         font-weight: bold;
-         font-size: 11px;
-      }
-      .style10 {
-         border-right: #000000 1px solid;
-         font-family: Arial, Helvetica, sans-serif;
-         font-size: 11px;
-         font-weight: bold;
-      }
-      .texto_afastado{
-         font-family: Arial, Helvetica, sans-serif;
-         font-size: 11px;
-         font-weight: bold;
-         letter-spacing:3px;
-      }
-      .style12 {
-         font-family: Arial; 
-         font-size: 10px; 
-      }
-      .style14 {
-         font-family: Arial, Helvetica, sans-serif; 
-         font-size: 10px; 
-      }
-      .style17 {
-         font-family: Arial, Helvetica, sans-serif; 
-         font-size: 12px; 
-         font-weight: bold; 
-      }
-      .style18 {
-         font-size: 10
-      }
-      .style19 {
-         font-family: Arial, Helvetica, sans-serif;
-         font-size: 16px;
-         font-weight: bold;
-      }
-      .style12_italico {
-         font-family: Arial; 
-         font-size: 12px
-      }
-
-      .cabecalho_span{
-         font:normal 100% arial;
-      }
-
-      .titulo_center{
-         text-align:center;
-      }
-
-      .titulo_left{
-         text-align:left;
-         padding-left:15px;
-      }
-   }
-*/
