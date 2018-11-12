@@ -32,6 +32,7 @@ use PHPMailer\PHPMailer\Exception;
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 ini_set("memory_limit","128M");
+date_default_timezone_set('America/Sao_Paulo');
 
 ################################## Includes ##################################
 include_once ("./class/Parametros.class.php");
@@ -43,7 +44,6 @@ $fimlim = (PHP_SAPI == 'cli' ? "\n" : "<br />");
 $msg    = '';
 $dirins = 'fdcpdf/';
 $dirimg = '';
-$dirpdf = '';
 $urlsia = '';
 $nompdf = '';
 
@@ -83,7 +83,7 @@ $enviarEmail = (isset($param['e']) ? $param['e']      : '');
 $imagem = (isset($param['logo'])   ? $param['logo']   : '');
 
 $DevProd = (isset($param['dev'])   ? $param['dev']    : '');
-$DevProd = 'D';
+//$DevProd = 'D';
 
 ## Validacao dos Parametros
 if ($idgpas == '' && $idusu == '' && $email == '') {
@@ -181,11 +181,11 @@ for ($x=0;$x < count($fc_Pas);$x++) {
    $tipo = $fc_Pas[$x]->situac;
    
    $cancelada  = '';
-   $TipoTitulo = ($tipo != 'PAS' ? 'Orçamento' : 'Passagem');
+   $TipoTitulo = ($tipo !== 'PAS' ? 'Orçamento' : 'Passagem');
    $Titulo     = $TipoTitulo . ' ' . $fc_Pas[$x]->idipas; 
    $TituloPDF  = $Titulo . ' (' . strtolower($fc_Ofi->e_mail) . ')';
    $arqret     = ($tipo != 'PAS' ?  'ORC_' : 'PAS_')  . $fc_Pas[$x]->idipas . '_' . $fc_Ofi->idusu ;
-   $arqpdf     = $arqret.'.pdf';
+   $arqpdf     = str_replace('/', '_', $arqret).'.pdf';
 
    ## Marca d'agua
    if($tipo == 'CAN'){
@@ -210,13 +210,24 @@ for ($x=0;$x < count($fc_Pas);$x++) {
       $Email_Empresa = 'fdc@fdc.procyon.com.br';
       $Nome_Empresa  = 'Ficha do Carro';
       $Email_Cliente = 'jose@procyon.com.br';
-      $Nome_Cliente  = 'José Augusto Freire'; 
+      $Nome_Cliente  = 'Jose Augusto Freire'; 
    } else {
       $Email_Empresa = strtolower($fc_Ofi->e_mail);
       $Nome_Empresa  = strtoupper($fc_Ofi->nome);
       $Email_Cliente = strtolower($fc_Usu->e_mail);
       $Nome_Cliente  = Util::subhex($fc_Usu->nome); 
    }
+   
+   $TextoHTML   = 'Caro Sr(a) ' . $Nome_Cliente . ', <br/><br/>     Segue em anexo '
+                . ($tipo != 'PAS' ? 'o orcamento ' : 'a passagem ')
+                . '<b>' . $fc_Pas[$x]->idipas . '</b><br/><br/>'
+                . 'Atenciosamente<br/><br/>' . $Nome_Empresa;
+   
+   
+   $TextoTXT    = 'Caro Sr(a) ' . $Nome_Cliente . ', \n\n     Segue em anexo '
+                . ($tipo != 'PAS' ? 'o orcamento ' : 'a passagem ')
+                . $fc_Pas[$x]->idipas . '\n\n'
+                . 'Atenciosamente\n\n' . $Nome_Empresa;
    
    if ($view !== 'B') {
       ## Geracao do PDF - Obtém os dados do buffer interno
@@ -254,7 +265,7 @@ for ($x=0;$x < count($fc_Pas);$x++) {
             ## Enviar como anexo por email
             
             if ($enviarEmail != '') {
-               if ($enviarEmail != 'S') {
+               if ($enviarEmail == 'S') {
                   $html2pdf->output(__DIR__.'/pdftmp/'.$arqpdf,'FI');
                } else {
                   $html2pdf->output(__DIR__.'/pdftmp/'.$arqpdf,'F');
@@ -263,7 +274,7 @@ for ($x=0;$x < count($fc_Pas);$x++) {
                $mail = new PHPMailer(true);                             // Passing `true` enables exceptions
                try {
                   //Server settings
-                  $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+                  $mail->SMTPDebug = 0;                                 // Enable verbose debug output (2) Debug
                   $mail->isSMTP();                                      // Set mailer to use SMTP
                   $mail->Host = 'mx1.hostinger.com.br';                 // Specify main and backup SMTP servers
                   $mail->SMTPAuth = true;                               // Enable SMTP authentication
@@ -277,8 +288,9 @@ for ($x=0;$x < count($fc_Pas);$x++) {
                   $mail->addAddress($Email_Cliente, $Nome_Cliente);     // Destinatario
                   //$mail->addAddress('ellen@example.com');             // Name is optional
                   $mail->addReplyTo($Email_Empresa, $Nome_Empresa);     // Empresa Emisora
-                  $mail->addCC('tanabe@procyon.com.br');
-                  $mail->addCC('sandrop@procyon.com.br');
+                  $mail->addBCC('tanabe@procyon.com.br');
+                  $mail->addBCC('sandrop@procyon.com.br');
+                  $mail->addBCC('jose@procyon.com.br');
                   //$mail->addBCC('bcc@example.com');
 
                   //Attachments
@@ -291,8 +303,19 @@ for ($x=0;$x < count($fc_Pas);$x++) {
                   //Content
                   $mail->isHTML(true);                                  // Set email format to HTML
                   $mail->Subject = $TituloPDF;
-                  $mail->Body    = 'Caro Fulano, segue em anexo o orçamento <b>xxxxx</b> solicitado.';
-                  $mail->AltBody = 'Caro Fulano, segue em anexo o orçamento xxxxx solicitado.';
+                  
+                  //$mail->Body    = 'Caro Fulano, segue em anexo o orçamento <b>xxxxx</b> solicitado.';
+                  //$mail->AltBody = 'Caro Fulano, segue em anexo o orçamento xxxxx solicitado.';
+                  
+                  $mail->Body    = $TextoHTML;
+                  //$mail->AltBody = $TextoTXT;
+                  
+                  ## Confirmacao de recebimento (Teste)
+                  //$mail->AddCustomHeader( 'X-pmrqc: 1' );
+                  //$mail->AddCustomHeader( "X-Confirm-Reading-To: " . $Email_Empresa );
+                  //$mail->AddCustomHeader( "Return-receipt-to: " . $Email_Empresa );
+                  //$mail->AddCustomHeader( "Disposition-Notification-To:<" . $Email_Empresa . ">");
+                  //$mail->ConfirmReadingTo = $Email_Empresa;
 
                   $mail->send();
                   //echo 'Message has been sent';
@@ -320,3 +343,4 @@ for ($x=0;$x < count($fc_Pas);$x++) {
 ## Forca fechamento do programa
 exit(0);
 ?>
+ 

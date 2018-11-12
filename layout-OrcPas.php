@@ -1,4 +1,11 @@
 <?PHP
+/**
+ * @category   Ficha do Carro
+ * @package    FDC
+ * @copyright  Copyright (c) 2018
+ * @author     Jose Augsuto Freire <jose at procyon dot com dot br>
+ * @comment    Layout do Orçamento / Passagem
+ */
 $Titulo_01 = htmlentities(strtoupper($fc_Ofi->nome));
 $Titulo_02 = Util::mask(strval($fc_Ofi->cgccpf),"##.###.###/####-##");
 $Titulo_03 = htmlentities(strtolower($fc_Ofi->fone));
@@ -9,12 +16,12 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
 <!-- Inclui pagina de estilos -->
 <link href="css/OrcPas.css" rel="stylesheet" type="text/css"/>
 
-<page style="font-size: 11px">
+<page backtop="36mm" backbottom="5mm" style="font-size: 11px">
    <!-- Inicio Cabecalho -->
+   <page_header>
    <table border="0" cellspacing="0" cellpadding="0" style="width: 700px;">
       <tr>
-         <td valign="middle" align="center" style="width: 450px; height: 40; padding: 4px; border: #000000 1px solid;">
-            
+         <td valign="middle" align="center" style="width: 450px; padding: 4px; border: #000000 1px solid;">
             <table border="0" cellspacing="0" cellpadding="0" style="width: 450px;">
                <tr>
                   <?php if (!empty($logo)) { ?>
@@ -31,32 +38,32 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
                   </td>
                   <?php } ?>
                   
-                  <td align="center" style="width: 350px; height:140; padding:4px;">
+                  <td align="center" style="width: 350px; height:110; padding:4px;">
                      <table border="0" cellspacing="0" cellpadding="0">
                         <tr>
-                           <td align="center" style="width: 350px; height:25px;">
+                           <td align="center" style="width: 350px; height:35px;">
                               <span style="font-family:Helvetica; font-size:18">
                                  <b><?php echo $Titulo_01 ?></b>
                               </span>
                            </td>
                         </tr>
                         <tr>
-                           <td height="25" align="center">
-                              <span style="font-family:Helvetica; font-size:14">
+                           <td align="center">
+                              <span style="font-family:Helvetica; font-size:14; height:24px;">
                                  <b><?php echo $Titulo_02 ?></b>
                               </span>
                            </td>
                         </tr>
                         <tr>
-                           <td height="25" align="center">
-                              <span style="font-family:Helvetica; font-size:14">
+                           <td align="center">
+                              <span style="font-family:Helvetica; font-size:14; height:24px;">
                                  <b><?php echo $Titulo_03 ?></b>
                               </span>
                            </td>
                         </tr>
                         <tr>
-                           <td height="25" align="center">
-                              <span style="font-family:Helvetica; font-size:10">
+                           <td align="center">
+                              <span style="font-family:Helvetica; font-size:10; height:24px;">
                                  <?php echo $Titulo_04 ?>
                               </span>
                            </td>
@@ -66,33 +73,33 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
                </tr>
             </table>
          </td>
-         <td valign="top" style="height:140; width: 230px; border-top: #000000 1px solid; border-right: #000000 1px solid; border-bottom: #000000 1px solid;">
+         <td valign="top" style="width: 230px; border-top: #000000 1px solid; border-right: #000000 1px solid; border-bottom: #000000 1px solid;">
 
-            <table border="0" cellspacing="0" cellpadding="4" style="width: 230px; height:140px;">
+            <table border="0" cellspacing="0" cellpadding="4" style="width: 230px;">
                <tr>
-                  <td colspan="2" valign="middle" align="center" class="titulo" bgcolor="#FFFFEA" style="width: 230px; height:40px; border-bottom: #000000 1px solid;">
-                     <?php echo 'DADOS ' . ($tipo == 'OrcPas' ? 'DO '.htmlentities('ORÇAMENTO')  : 'DA PASSAGEM') ?>
+                  <td colspan="2" valign="middle" align="center" class="titulo" bgcolor="#FFFFEA" style="width: 230px; height:30px; border-bottom: #000000 1px solid;">
+                     <?php echo 'DADOS ' . ($tipo == 'ORC' ? 'DO '.htmlentities('ORÇAMENTO')  : 'DA PASSAGEM') ?>
                   </td>
                </tr>
                <tr>
-                  <td colspan="2" valign="middle" class="titulo" align="center" height="80"
+                  <td colspan="2" valign="middle" class="titulo" align="center" height="55"
                         style="border-top: #000000 1px solid; font-size: 28px; border-bottom: #000000 1px solid;">
                      <b><?php echo $fc_Pas[$x]->idipas ?></b>
                   </td>
                </tr>
                <tr>
-                  <td class="legenda" valign="middle" style="height:20px; border-top: #000000 1px solid; border-right: #000000 1px solid;">
+                  <td class="legenda" valign="middle" style="height:12px; border-top: #000000 1px solid; border-right: #000000 1px solid;">
                      Data:
                   </td>
-                  <td class="legenda" valign="middle" style="height:20px; border-top: #000000 1px solid;">
+                  <td class="legenda" valign="middle" style="height:12px; border-top: #000000 1px solid;">
                      Andamento:
                   </td>
                </tr>
                <tr>
-                  <td class="campo" valign="middle" align="center" style="height:20px; border-right: #000000 1px solid;">
+                  <td class="campo" valign="middle" align="center" style="height:12px; border-right: #000000 1px solid;">
                      <?php echo date('d/m/Y',strtotime($fc_Pas[$x]->dtpsg)) ?>
                   </td>
-                  <td class="campo" valign="middle" align="center" style="height:20px;">
+                  <td class="campo" valign="middle" align="center" style="height:12px;">
                      &nbsp;
                   </td>
                </tr>
@@ -101,6 +108,7 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
          </td>
       </tr>
    </table>
+   </page_header>
    <!-- Fim Cabecalho -->
    
    <!-- Inicio Dados Prestador -->
@@ -283,7 +291,7 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
    <table border="0" cellspacing="0" cellpadding="0" style="width: 700px;">
       <tr>
          <td valign="middle" align="center" bgcolor="#FFFFEA" class="titulo" style="width: 700px; height: 25; border: #000000 1px solid;">
-            VEICULO
+            VEÍCULO
          </td>
       </tr>
       <tr>
@@ -326,8 +334,6 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
    <!-- Fim Dados Veiculo -->
 
    <!-- Inicio Descricao dos Itens Servicos -->
-   <?php if ($fc_Ser !== NULL) { ?>
-
    <table width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
          <td height="10" style="font-size: 10px;">
@@ -364,24 +370,45 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
                </tr>
                
                <?php
-               foreach ($fc_Ser as $item) {
-                  $it  = '<tr>';
-                  $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
-                  $it .=       $item->codser;
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted; text-align="left">';
-                  $it .=      Util::subhex($item->descri);
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
-                  $it .=       $item->quant;
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
-                  $it .=       $item->vlruni;
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed;">';
-                  $it .=       $item->vlrtot;
-                  $it .=    '</td>';
-                  $it .= '</tr>';
+               if ($fc_Ser !== NULL) {
+                  foreach ($fc_Ser as $item) {
+                     $it  = '<tr>';
+                     $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
+                     $it .=       $item->codser;
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted; text-align="left">';
+                     $it .=      Util::subhex($item->descri);
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
+                     $it .=       $item->quant;
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
+                     $it .=       $item->vlruni;
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed;">';
+                     $it .=       $item->vlrtot;
+                     $it .=    '</td>';
+                     $it .= '</tr>';
+                     echo $it;
+                  }
+               } else {
+                  $it  = '<tr>'
+                          . '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted; text-align="left">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="right" style="border-bottom: #000000 1px dashed;">'
+                             . '&nbsp;'
+                          . '</td>'
+                       . '</tr>';
                   echo $it;
                }
                ?>
@@ -389,13 +416,9 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
          </td>
       </tr>
    </table>
-   
-   <?php } ?>
    <!-- Fim Descricao dos Itens Servicos -->
 
    <!-- Inicio Descricao dos Itens Pecas -->
-   <?php if ($fc_Pec !== NULL) { ?>
-
    <table width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
          <td height="10" style="font-size: 10px;">
@@ -432,24 +455,45 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
                </tr>
                
                <?php
-               foreach ($fc_Pec as $item) {
-                  $it  = '<tr>';
-                  $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
-                  $it .=       $item->codpec;
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted; text-align="left">';
-                  $it .=      Util::subhex($item->descri);
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
-                  $it .=       $item->quant;
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
-                  $it .=       $item->vlruni;
-                  $it .=    '</td>';
-                  $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed;">';
-                  $it .=       $item->vlrtot;
-                  $it .=    '</td>';
-                  $it .= '</tr>';
+               if ($fc_Pec !== NULL) {
+                  foreach ($fc_Pec as $item) {
+                     $it  = '<tr>';
+                     $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
+                     $it .=       $item->codpec;
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted; text-align="left">';
+                     $it .=      Util::subhex($item->descri);
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
+                     $it .=       $item->quant;
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">';
+                     $it .=       $item->vlruni;
+                     $it .=    '</td>';
+                     $it .=    '<td class="item" align="right" style="border-bottom: #000000 1px dashed;">';
+                     $it .=       $item->vlrtot;
+                     $it .=    '</td>';
+                     $it .= '</tr>';
+                     echo $it;
+                  }
+               } else {
+                  $it  = '<tr>'
+                          . '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="left" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted; text-align="left">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="right" style="border-bottom: #000000 1px dashed; border-right: #000000 1px dotted">'
+                             . '&nbsp;'
+                          . '</td>'
+                          . '<td class="item" align="right" style="border-bottom: #000000 1px dashed;">'
+                             . '&nbsp;'
+                          . '</td>'
+                       . '</tr>';
                   echo $it;
                }
                ?>
@@ -457,8 +501,6 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
          </td>
       </tr>
    </table>
-   
-   <?php } ?>
    <!-- Fim Descricao dos Itens Pecas -->
 
    <!-- Inicio Totais -->
@@ -472,11 +514,59 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
 
    <table border="0" cellpadding="2" cellspacing="0" style="width: 700px;">
       <tr>
-         <td rolspan="2" style="width: 185px; height: 22;">
+         <td rolspan="2" style="width: 182px; height: 22;">
             &nbsp;
          </td>
-         <td style="width: 373px; height: 20mm">
-            &nbsp;
+         <!--td style="width: 373px; height: 20mm">&nbsp;</td-->
+         <td>
+            <table border="0" cellpadding="2" cellspacing="0" style="width: 180px; height: 20mm;">
+               <tr>
+                  <td class="leg_totais" style="width: 180px; border-left: #000000 1px solid; border-right: #000000 1px solid; border-bottom: #000000 1px dotted; border-top: #000000 1px solid;">
+                     Valor Total Serviços
+                  </td>
+               </tr>
+               <tr>
+                  <td class="cam_totais" style="width: 180px; height: 10mm; border-left: #000000 1px solid; border-right: #000000 1px solid; border-bottom: #000000 1px solid; font-size: 16px;">
+                     <?php 
+                        if ($Totais !== NULL) { 
+                           echo (!empty($Totais->lblser) ? $Totais->lblser : '0,00');
+                        } else {
+                           echo '0,00';
+                        }
+                     ?>
+                  </td>
+               </tr>
+               <tr>
+                  <td align="center" style="font-size: 9px; width: 180px; height: 5mm;">
+            				&nbsp;
+                  </td>
+               </tr>
+            </table>
+         </td>
+         <td>
+            <table border="0" cellpadding="2" cellspacing="0" style="width: 180px; height: 20mm;">
+               <tr>
+                  <td class="leg_totais" style="width: 180px; border-left: #000000 1px solid; border-right: #000000 1px solid; border-bottom: #000000 1px dotted; border-top: #000000 1px solid;">
+                     Valor Total Peças
+                  </td>
+               </tr>
+               <tr>
+                  <td class="cam_totais" style="width: 180px; height: 10mm; border-left: #000000 1px solid; border-right: #000000 1px solid; border-bottom: #000000 1px solid; font-size: 16px;">
+                     <?php 
+                        if ($Totais !== NULL) { 
+                           echo (!empty($Totais->lblpec) ? $Totais->lblpec : '0,00');
+                        } else {
+                           echo '0,00';
+                        }
+                     ?>
+                  </td>
+               </tr>
+               <tr>
+                  <td align="center" style="font-size: 9px; width: 180px; height: 5mm;">
+            				&nbsp;
+                  </td>
+               </tr>
+            </table>
          </td>
          <td>
             <table border="0" cellpadding="2" cellspacing="0" style="width: 185px; height: 20mm;">
@@ -509,32 +599,14 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
 
    <!-- Inicio Rodape -->
    <page_footer>
-   <table border="0" cellpadding="2" cellspacing="0" style="width: 700px;">
+   <table border="0" cellpadding="2" cellspacing="0" style="width: 197mm;">
       <tr>
-         <td rolspan="2" style="width: 185px; height: 22;">
+         <td style="width: 22mm; height: 22mm;">
             <qrcode value="<?php echo $QRCode; ?>" style="width: 20mm;"></qrcode>
          </td>
-         <td style="width: 373px; height: 20mm">
-            &nbsp;
-         </td>
-         <td>
-            <table border="0" cellpadding="0" cellspacing="0" style="width: 185px; height: 20mm;">
-               <tr>
-                  <td style="width: 185px;">
-            				&nbsp;
-                  </td>
-               </tr>
-               <tr>
-                  <td style="width: 185px; height: 10mm;">
-            				&nbsp;
-                  </td>
-               </tr>
-               <tr>
-                  <td align="center" style="font-size: 9px; width: 185px; height: 5mm;">
-                     Powered by <a href="https://www.fichadocarro.com.br">https://www.fichadocarro.com.br</a>
-                  </td>
-               </tr>
-            </table>
+         <td align="right" valign="bottom" style="font-size: 9px; width: 175mm; height: 20mm;">
+            Powered by <a href="https://www.fichadocarro.com.br">https://www.fichadocarro.com.br</a> 
+            - Gerado em <?php echo date("d-m-Y") . ' as ' . date("H:i:s"); ?>
          </td>
       </tr>
    </table>
@@ -544,3 +616,4 @@ $Titulo_04 = htmlentities(strtolower($fc_Ofi->e_mail));
 </page>
 <!-- Final do HTML -->
 
+ 
