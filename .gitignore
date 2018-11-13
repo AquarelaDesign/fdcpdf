@@ -1,4 +1,4 @@
 .vscode
 composer.lock
 vendor
-
+*.git
