@@ -206,6 +206,8 @@ for ($x=0;$x < count($fc_Pas);$x++) {
       exit;
    }
    
+   $Email_Emissora = 'fdc@fdc.procyon.com.br';
+   
    if ($DevProd == 'D') {
       $Email_Empresa = 'fdc@fdc.procyon.com.br';
       $Nome_Empresa  = 'Ficha do Carro';
@@ -284,7 +286,7 @@ for ($x=0;$x < count($fc_Pas);$x++) {
                   $mail->Port = 587;                                    // TCP port to connect to
 
                   //Recipients
-                  $mail->setFrom($Email_Empresa, $Nome_Empresa);        // Empresa Emisora
+                  $mail->setFrom($Email_Emissora, $Nome_Empresa);       // Empresa Emisora
                   $mail->addAddress($Email_Cliente, $Nome_Cliente);     // Destinatario
                   //$mail->addAddress('ellen@example.com');             // Name is optional
                   $mail->addReplyTo($Email_Empresa, $Nome_Empresa);     // Empresa Emisora
@@ -307,7 +309,13 @@ for ($x=0;$x < count($fc_Pas);$x++) {
                   //$mail->Body    = 'Caro Fulano, segue em anexo o orçamento <b>xxxxx</b> solicitado.';
                   //$mail->AltBody = 'Caro Fulano, segue em anexo o orçamento xxxxx solicitado.';
                   
-                  $mail->Body    = $TextoHTML;
+                  $depura = '<br>Email_Emissora: ' . $Email_Emissora
+                          . '<br>Email_Cliente: ' . $Email_Cliente
+                          . '<br>Nome_Cliente: ' . $Nome_Cliente
+                          . '<br>Email_Empresa: ' . $Email_Empresa
+                          . '<br>Nome_Empresa: ' . $Nome_Empresa;
+                  
+                  $mail->Body    = $TextoHTML; // . $depura;
                   //$mail->AltBody = $TextoTXT;
                   
                   ## Confirmacao de recebimento (Teste)
